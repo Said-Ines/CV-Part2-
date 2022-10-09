@@ -1,6 +1,4 @@
 package com.example.cvpart2
-
-
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -22,11 +20,10 @@ import androidx.core.content.ContextCompat
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 
-/*const val NAME = "NAME"
+const val NAME = "NAME"
 const val EMAIL = "EMAIL"
 const val AGE = "age"
-const val GENDER = "GENDER"*/
-
+const val GENDER = "GENDER"
 
 class MainActivity : AppCompatActivity()
 {
@@ -49,6 +46,8 @@ class MainActivity : AppCompatActivity()
    private var pickedPhoto: Uri? = null
     private  var pickedBitMap: Bitmap? = null
 
+
+    private val REQUEST_IMAGE_GALLERY=1
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
@@ -66,20 +65,29 @@ class MainActivity : AppCompatActivity()
         errorEmail= findViewById(R.id.Email)
         errorAge=findViewById(R.id.Age)
 
-        var userPic = findViewById<ImageView>(R.id.UserPic)
+        var userPic: ImageView = findViewById(R.id.UserPic)
         btnNext!!.setOnClickListener()
         {
             clickNext()
         }
+
+        userPic.setOnClickListener {
+
+            val galleryIntent=Intent(Intent.ACTION_PICK)
+            galleryIntent.type="image/*"
+            startActivityForResult(galleryIntent,REQUEST_IMAGE_GALLERY)
+
+        }
+
     }
 
 
-     /*fun pickPhoto(view:View){
+    fun pickPhoto(view: View){
         if(ContextCompat.checkSelfPermission(this,android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(this,arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE),1)
         }
         else{
-            val galleryIntent = Intent(Intent.ACTION_PICK,MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+            val galleryIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
             startActivityForResult(galleryIntent,2)
         }
     }
@@ -104,7 +112,7 @@ class MainActivity : AppCompatActivity()
             pickedPhoto=data.data
             if (pickedPhoto != null){
                 if (Build.VERSION.SDK_INT>=28){
-                    val source=ImageDecoder.createSource(this.contentResolver,pickedPhoto!!)
+                    val source= ImageDecoder.createSource(this.contentResolver,pickedPhoto!!)
                     pickedBitMap=ImageDecoder.decodeBitmap(source)
                     userPic?.setImageBitmap(pickedBitMap)
 
@@ -117,11 +125,11 @@ class MainActivity : AppCompatActivity()
         }
 
         super.onActivityResult(requestCode, resultCode, data)
-    }*/
+    }
 
     private fun clickNext()
     {
-       /* if(validate())
+        if(validate())
         {
 
             val nAme = fullName!!.text.toString()
@@ -131,9 +139,16 @@ class MainActivity : AppCompatActivity()
                 "Male"
             } else "Female"
 
-
-    }*/
+            val intent = Intent(this,ThirdActivity::class.java).apply{
+                putExtra(NAME,nAme)
+                putExtra(EMAIL,eMail)
+                putExtra(AGE,aGe)
+                putExtra(GENDER,gEnder)
+            }
+            startActivity(intent)
+        }
     }
+
 
     private fun validate():Boolean
     {
@@ -178,5 +193,6 @@ class MainActivity : AppCompatActivity()
             return false
         }
         return true
-    }
-}
+    }}
+
+
